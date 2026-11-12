@@ -1,0 +1,123 @@
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Snip home">
+    <span class="brand-mark" aria-hidden="true">s</span>
+    <span>snip</span>
+  </a>
+  <span class="topbar-note">LINKS, MADE SIMPLE</span>
+</header>
+
+<main class="page-shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Your links, in good company</p>
+    <h1 id="hero-title">A little less link.<br /><span>A lot more you.</span></h1>
+    <p class="hero-copy">Turn long URLs into tidy little shortcuts. Paste one below to get started.</p>
+
+    <form class="shorten-form" [formGroup]="form" (ngSubmit)="createLink()" novalidate>
+      <label class="sr-only" for="destination">URL to shorten</label>
+      <div class="input-shell" [class.input-invalid]="urlControl.invalid && (urlControl.dirty || urlControl.touched)">
+        <span class="link-icon" aria-hidden="true">↗</span>
+        <input
+          id="destination"
+          type="url"
+          inputmode="url"
+          autocomplete="url"
+          formControlName="url"
+          placeholder="https://your-very-long-link.com/..."
+          [attr.aria-invalid]="urlControl.invalid && (urlControl.dirty || urlControl.touched)"
+          aria-describedby="url-hint"
+        />
+        <button class="shorten-button" type="submit" [disabled]="isSubmitting()">
+          <span>{{ isSubmitting() ? 'Making your link…' : 'Shorten link' }}</span>
+          <span class="button-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+      <p class="field-hint" id="url-hint">
+        @if (urlControl.invalid && (urlControl.dirty || urlControl.touched)) {
+          Enter a complete URL beginning with http:// or https://.
+        } @else {
+          Only you and the people you share it with need the long version.
+        }
+      </p>
+
+      @if (errorMessage()) {
+        <p class="feedback feedback-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (createdLink(); as link) {
+        <div class="feedback feedback-success" role="status">
+          <span class="success-check" aria-hidden="true">✓</span>
+          <span>Your short link is ready:</span>
+          <a class="result-link" [href]="link.shortUrl" target="_blank" rel="noopener noreferrer">
+            {{ link.shortUrl }} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      }
+    </form>
+  </section>
+
+  <section class="links-section" aria-labelledby="links-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">YOUR COLLECTION</p>
+        <h2 id="links-title">Recent links <span class="link-count">{{ links().length }}</span></h2>
+      </div>
+      <button class="refresh-button" type="button" (click)="refreshLinks()" [disabled]="loading()">
+        <span aria-hidden="true">↻</span>
+        <span>{{ loading() ? 'Loading' : 'Refresh' }}</span>
+      </button>
+    </div>
+
+    <div class="table-card" [attr.aria-busy]="loading()">
+      @if (loading()) {
+        <div class="table-state" role="status">
+          <span class="state-spinner" aria-hidden="true"></span>
+          Loading your links…
+        </div>
+      } @else if (loadError()) {
+        <div class="table-state table-error" role="alert">
+          <p>{{ loadError() }}</p>
+          <button class="retry-button" type="button" (click)="refreshLinks()">Try again</button>
+        </div>
+      } @else if (links().length === 0) {
+        <div class="table-state empty-state">
+          <span class="empty-icon" aria-hidden="true">↗</span>
+          <p class="empty-title">Your next great link starts here.</p>
+          <p>Shorten a URL above and it’ll show up in this space.</p>
+        </div>
+      } @else {
+        <div class="table-scroll">
+          <table>
+            <caption class="sr-only">Your shortened links and their visit counts</caption>
+            <thead>
+              <tr>
+                <th scope="col">SHORT LINK</th>
+                <th scope="col">DESTINATION</th>
+                <th scope="col" class="hits-column">VISITS</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (link of links(); track link.code) {
+                <tr>
+                  <td>
+                    <a class="short-code" [href]="link.shortUrl" target="_blank" rel="noopener noreferrer"
+                      [attr.aria-label]="'Open short link ' + link.code + ' in a new tab'">
+                      <span class="code-icon" aria-hidden="true">↗</span>{{ link.code }}
+                    </a>
+                  </td>
+                  <td class="destination-cell" [title]="link.url">{{ link.url }}</td>
+                  <td class="hits-cell">{{ link.hits }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <span>Made for the links worth sharing.</span>
+    <span class="footer-dot" aria-hidden="true">·</span>
+    <span>Small links, big energy.</span>
+  </footer>
+</main>
