@@ -77,4 +77,4 @@ Use the corresponding submodule path for `frontend` or `cli`. Generate and publi
 node scripts/build-bundle.mjs --push
 ```
 
-`bundle/` is generated output; do not edit it by hand.
+`bundle/` is generated output; do not edit it by hand. The bundle workflow rebuilds it hourly and on manual dispatch. A change to the pinned `bundle/` commit on `main` triggers the Docker image workflow.
