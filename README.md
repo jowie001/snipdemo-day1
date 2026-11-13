@@ -7,7 +7,7 @@ Snip is a small URL shortener with one backend and two clients: a web UI and a t
 | Branch | Path | Contents |
 | --- | --- | --- |
 | `backend` | `backend/` | Bun API server; in-memory link storage |
-| `frontend` | `frontend/` | Angular 19 web app |
+| `frontend` | `frontend/` | Angular 20 web app |
 | `cli` | `cli/` | Zero-dependency CommonJS CLI |
 | `bundle` | `bundle/` | Generated release: API server, built UI, and CLI |
 | `main` | repository root | Superproject, build script, and CI |
@@ -77,4 +77,4 @@ Use the corresponding submodule path for `frontend` or `cli`. Generate and publi
 node scripts/build-bundle.mjs --push
 ```
 
-`bundle/` is generated output; do not edit it by hand. The bundle workflow rebuilds it hourly and on manual dispatch. A change to the pinned `bundle/` commit on `main` triggers the Docker image workflow.
+`bundle/` is generated output; do not edit it by hand. The bundle workflow rebuilds it hourly and on manual dispatch. A change to the pinned `bundle/` commit on `main` triggers the Docker image workflow. The image is published to GHCR only after the frontend build and tests, API/CLI smoke tests, and high/critical vulnerability scans pass.
