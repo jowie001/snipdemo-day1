@@ -1,6 +1,6 @@
 # Snip Frontend
 
-The Angular 19 client for Snip. It creates short links and lists them from the shared API.
+The Angular 20 client for Snip. It creates short links and lists them from the shared API.
 
 ## Run locally
 
